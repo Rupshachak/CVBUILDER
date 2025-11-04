@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Builder | Landing Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 text-gray-800 antialiased">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 flex justify-between items-center px-6 md:px-10 py-4 bg-white shadow-md backdrop-blur-sm bg-opacity-95">
+      <h1 class="text-2xl md:text-3xl font-bold text-blue-600 tracking-tight">
+        Resume<span class="text-gray-800">Builder</span>
+      </h1>
+
+      <div class="hidden md:flex space-x-8 text-gray-700 font-medium">
+        <a href="#features" class="hover:text-blue-600 transition">Features</a>
+        <a href="#get-started" class="hover:text-blue-600 transition">Get Started</a>
+        <a href="#contact" class="hover:text-blue-600 transition">Contact</a>
+      </div>
+
+      <div class="hidden md:flex items-center space-x-4">
+        {% if logged_in %}
+          <span class="text-gray-600 font-medium">Hello, {{ session['username'] }}</span>
+          <a href="/logout" class="px-5 py-2 border border-red-600 text-red-600 rounded-lg font-semibold hover:bg-red-600 hover:text-white transition">Logout</a>
+        {% else %}
+          <a href="/login" class="px-5 py-2 border border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition">Login</a>
+          <a href="/signup" class="px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">Sign Up</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="text-center py-20 px-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-5xl font-extrabold mb-6 text-gray-900 leading-tight">
+          Build Your Resume <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Effortlessly</span>
+        </h2>
+        <p class="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
+          Create your professional resume in minutes. Choose a style, fill your info, and download instantly.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a href="{% if logged_in %}/templates{% else %}/login{% endif %}" 
+             class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-semibold text-lg">
+            Get Started Free
+          </a>
+          <a href="#features" class="bg-white text-blue-600 px-8 py-4 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold text-lg border-2 border-blue-100">
+            Learn More
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section id="get-started" class="py-20 bg-gradient-to-b from-blue-50 to-white text-center">
+      <div class="max-w-3xl mx-auto px-6">
+        <h3 class="text-4xl font-bold mb-6 text-gray-900">Get Started in Minutes</h3>
+        <p class="text-lg text-gray-600 mb-10">
+          {% if logged_in %}
+            You're logged in! Click below to start building your resume.
+          {% else %}
+            Please sign up or log in to start creating your professional resume.
+          {% endif %}
+        </p>
+        <a href="{% if logged_in %}/templates{% else %}/login{% endif %}" 
+           class="bg-blue-600 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition shadow-md hover:shadow-lg">
+          {% if logged_in %}Start Building Now{% else %}Login to Start{% endif %}
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+<footer id="contact" class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 py-12 px-6">
+  <div class="max-w-5xl mx-auto text-center space-y-6">
+    <h3 class="text-2xl font-semibold text-white">ResumeBuilder</h3>
+    <p class="text-gray-400">Your trusted tool to craft professional resumes with ease.</p>
+
+    <div class="flex justify-center space-x-6 mt-6">
+      <a href="mailto:support@resumebuilder.com" class="hover:text-white transition">support@resumebuilder.com</a>
+      <span class="text-gray-500">|</span>
+      <a href="#faq" class="hover:text-white transition">FAQ</a>
+      <span class="text-gray-500">|</span>
+      <a href="#privacy" class="hover:text-white transition">Privacy Policy</a>
+    </div>
+
+    <div class="flex justify-center space-x-6 mt-6">
+      <a href="#" class="hover:text-white transition" aria-label="Facebook">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.676 0H1.324C.593 0 0 .593 0 1.324v21.352C0 23.407.593 24 1.324 24h11.495v-9.294H9.691V11.01h3.128V8.309c0-3.1 1.893-4.788 4.66-4.788 1.324 0 2.463.099 2.794.143v3.24l-1.918.001c-1.504 0-1.794.715-1.794 1.763v2.314h3.587l-.467 3.696h-3.12V24h6.116C23.407 24 24 23.407 24 22.676V1.324C24 .593 23.407 0 22.676 0z"/></svg>
+      </a>
+      <a href="#" class="hover:text-white transition" aria-label="Twitter">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557a9.9 9.9 0 0 1-2.828.775A4.932 4.932 0 0 0 23.337 3.1a9.865 9.865 0 0 1-3.127 1.195 4.918 4.918 0 0 0-8.385 4.482 13.947 13.947 0 0 1-10.125-5.138 4.918 4.918 0 0 0 1.523 6.573A4.897 4.897 0 0 1 .964 9.13v.061a4.918 4.918 0 0 0 3.946 4.827 4.935 4.935 0 0 1-2.212.084 4.923 4.923 0 0 0 4.593 3.417A9.868 9.868 0 0 1 0 21.543a13.9 13.9 0 0 0 7.548 2.212c9.056 0 14.01-7.513 14.01-14.01 0-.213-.005-.425-.014-.636A10.012 10.012 0 0 0 24 4.557z"/></svg>
+      </a>
+      <a href="#" class="hover:text-white transition" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452H17.2v-5.569c0-1.328-.027-3.036-1.85-3.036-1.853 0-2.136 1.445-2.136 2.938v5.667h-3.245V9h3.115v1.561h.045c.435-.825 1.5-1.694 3.09-1.694 3.304 0 3.914 2.176 3.914 5.004v6.581zM5.337 7.433a1.88 1.88 0 1 1 0-3.76 1.88 1.88 0 0 1 0 3.76zM6.765 20.452H3.91V9h2.855v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.226.792 24 1.771 24h20.451C23.2 24 24 23.226 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
+      </a>
+    </div>
+
+    <p class="text-gray-500 text-sm mt-8">© 2025 ResumeBuilder. All rights reserved.</p>
+  </div>
+</footer>
+  </body>
+</html>

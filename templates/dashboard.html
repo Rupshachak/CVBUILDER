@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>My Dashboard | ResumeBuilder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white shadow px-8 py-4 flex justify-between items-center">
+    <a href="/">
+      <h1 class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition">ResumeBuilder</h1>
+    </a>
+    <div class="flex items-center space-x-4">
+      <span class="text-gray-700">{{ email }}</span>
+      <a href="{{ url_for('auth.logout') }}" class="text-red-600 hover:text-red-800">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Main Dashboard -->
+  <main class="max-w-6xl mx-auto mt-10 px-4 mb-10">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold">My Saved Resumes</h2>
+      <a href="{{ url_for('resume.template_select') }}" 
+         class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition">
+        + Create New Resume
+      </a>
+    </div>
+
+    {% if resumes %}
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="py-3 px-4 text-left">Name</th>
+              <th class="py-3 px-4 text-left">Template</th>
+              <th class="py-3 px-4 text-left">Created</th>
+              <th class="py-3 px-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in resumes %}
+            {# Safely build filename with null checks #}
+            {% set safe_name = (r[2] or 'Unnamed')|replace(' ', '_') %}
+            {% set safe_template = r[8] or 'modern' %}
+            {% set safe_timestamp = (r[9] or '')|replace(':', '')|replace('-', '')|replace(' ', '') %}
+            {% set filename = safe_name ~ '_' ~ safe_template ~ '_' ~ safe_timestamp ~ '.pdf' %}
+            
+            <tr class="border-b hover:bg-gray-50 transition">
+              <td class="py-3 px-4 font-medium">{{ r[2] or 'Unnamed' }}</td>
+              <td class="py-3 px-4">
+                <span class="inline-block px-3 py-1 rounded-full text-sm font-medium capitalize
+                  {% if r[8] == 'modern' %}bg-blue-100 text-blue-700
+                  {% elif r[8] == 'creative' %}bg-green-100 text-green-700
+                  {% else %}bg-gray-100 text-gray-700{% endif %}">
+                  {{ r[8] or 'modern' }}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-gray-600">{{ r[9] or 'N/A' }}</td>
+              <td class="py-3 px-4">
+                <div class="flex justify-center gap-2">
+                  <!-- View Button -->
+                  <a href="{{ url_for('resume.view_resume', filename=filename) }}" 
+                     target="_blank"
+                     class="inline-flex items-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded transition">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    View
+                  </a>
+
+                  <!-- Download Button -->
+                  <!-- Download Button -->
+<a href="{{ url_for('resume.download_resume', filename=filename) }}"
+   class="inline-flex items-center px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded transition">
+  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+  </svg>
+  Download
+</a>
+
+                  <!-- Delete Button -->
+                  <a href="{{ url_for('resume.delete_resume', resume_id=r[0]) }}"
+                     onclick="return confirm('Are you sure you want to delete this resume? This action cannot be undone.');"
+                     class="inline-flex items-center px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Delete
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="bg-white shadow rounded-lg p-12 text-center">
+        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <p class="text-xl text-gray-600 mb-4">You haven't created any resumes yet.</p>
+        <a href="{{ url_for('resume.template_select') }}" 
+           class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition">
+          Create Your First Resume
+        </a>
+      </div>
+    {% endif %}
+  </main>
+</body>
+</html>

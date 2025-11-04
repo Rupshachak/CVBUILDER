@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Resume Form - {{ template_style|capitalize }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Modern Template Styles */
+    .modern-preview .preview-header {
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      padding: 2rem;
+      color: white;
+      text-align: center;
+    }
+    .modern-preview .section-title {
+      color: #2563eb;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .modern-preview .job-title {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 1rem;
+    }
+    .modern-preview .company-name {
+      color: #6b7280;
+      font-style: italic;
+      margin-top: 0.25rem;
+    }
+    .modern-preview .date-range {
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+    .modern-preview .bullet-point {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+    }
+    .modern-preview .bullet-point:before {
+      content: "•";
+      position: absolute;
+      left: 0.5rem;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    /* Creative Template Styles */
+    .creative-preview .preview-container {
+      display: flex;
+      min-height: 600px;
+    }
+    .creative-preview .sidebar {
+      width: 35%;
+      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+      padding: 2rem 1.5rem;
+      color: white;
+    }
+    .creative-preview .main-content {
+      width: 65%;
+      padding: 2rem 1.5rem;
+    }
+    .creative-preview .sidebar-section-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .creative-preview .sidebar-section-title:first-child {
+      margin-top: 0;
+    }
+    .creative-preview .section-title {
+      color: #10b981;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .creative-preview .section-title:first-child {
+      margin-top: 0;
+    }
+    .creative-preview .job-title {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 1rem;
+    }
+    .creative-preview .company-name {
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+    .creative-preview .date-range {
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+    .creative-preview .bullet-point {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+    }
+    .creative-preview .bullet-point:before {
+      content: "•";
+      position: absolute;
+      left: 0.5rem;
+      color: #10b981;
+      font-weight: bold;
+    }
+
+    /* Simple Template Styles */
+    .simple-preview .preview-header {
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 3px solid #1f2937;
+    }
+    .simple-preview .section-title {
+      color: #1f2937;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .simple-preview .job-title {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 1rem;
+    }
+    .simple-preview .company-name {
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+    .simple-preview .date-range {
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+    .simple-preview .bullet-point {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+    }
+    .simple-preview .bullet-point:before {
+      content: "•";
+      position: absolute;
+      left: 0.5rem;
+      color: #1f2937;
+      font-weight: bold;
+    }
+
+    .experience-item, .education-item {
+      margin-bottom: 1.5rem;
+    }
+    
+    .skill-tag {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      background: #f3f4f6;
+      border-radius: 0.375rem;
+      color: #4b5563;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white shadow px-8 py-4 flex justify-between items-center sticky top-0 z-50">
+    <h1 class="text-2xl font-bold text-blue-600">ResumeBuilder</h1>
+    <div class="flex items-center space-x-4">
+      <a href="/dashboard" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+        View Dashboard
+      </a>
+      <span class="text-gray-700">{{ email }}</span>
+      <a href="{{ url_for('auth.logout') }}" class="text-red-600 hover:text-red-800">Logout</a>
+    </div>
+  </nav>
+
+  <div class="flex flex-col lg:flex-row gap-6 p-6 max-w-7xl mx-auto mb-16">
+    <!-- Form Section -->
+    <div class="lg:w-1/2 bg-white shadow rounded-lg p-8">
+      <!-- Progress Steps -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-lg font-bold text-gray-800" id="stepTitle">Personal Information</h3>
+            <p class="text-sm text-gray-500 mt-1">Step <span id="currentStep">1</span> of 5</p>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-bold text-blue-600"><span id="progressPercent">20</span>%</div>
+            <div class="text-xs text-gray-500">Complete</div>
+          </div>
+        </div>
+        
+        <!-- Simple Progress Bar -->
+        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+          <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out" style="width: 20%"></div>
+        </div>
+        
+        <!-- Step Labels -->
+        <div class="flex justify-between mt-3 text-xs">
+          <span class="step-label font-medium text-blue-600" id="label-1">Personal</span>
+          <span class="step-label text-gray-400" id="label-2">Contact</span>
+          <span class="step-label text-gray-400" id="label-3">Education</span>
+          <span class="step-label text-gray-400" id="label-4">Experience</span>
+          <span class="step-label text-gray-400" id="label-5">Skills</span>
+        </div>
+      </div>
+
+      <h2 class="text-3xl font-bold text-center mb-6">Resume Details</h2>
+      <p class="text-center text-gray-600 mb-8" id="stepDescription">
+        Let's start with your personal information
+      </p>
+
+      <form method="POST" action="{{ url_for('resume.generate_pdf') }}" class="space-y-6" id="resumeForm">
+        <input type="hidden" name="template_style" value="{{ template_style }}" id="templateStyle">
+
+        <!-- Step 1: Personal Info - Name & Title -->
+        <div class="form-step" id="form-step-1">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name *</label>
+              <input name="name" id="name" required placeholder="e.g., Sarah Johnson"
+                     class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400"/>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Professional Title (Optional)</label>
+              <input name="title" id="title" placeholder="e.g., Senior Software Engineer"
+                     class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Contact Info -->
+        <div class="form-step hidden" id="form-step-2">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
+              <input name="email" id="emailInput" type="email" required value="{{ email }}" 
+                     placeholder="your.email@example.com"
+                     class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400"/>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Phone *</label>
+              <input name="phone" id="phone" required placeholder="(555) 123-4567"
+                     class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400"/>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Location (Optional)</label>
+              <input name="location" id="location" placeholder="e.g., New York, NY"
+                     class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400"/>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">LinkedIn (Optional)</label>
+              <input name="linkedin" id="linkedin" placeholder="linkedin.com/in/yourprofile"
+                     class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Education -->
+        <div class="form-step hidden" id="form-step-3">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Education</label>
+            <p class="text-sm text-gray-500 mb-4">Add your educational background, starting with the most recent.</p>
+            <div id="education-section" class="space-y-4">
+              <div class="border rounded-lg p-4 bg-gray-50">
+                <div class="space-y-3">
+                  <input name="education_degree[]" type="text" placeholder="Degree (e.g., Bachelor of Science in Computer Science)"
+                         class="w-full p-2 border rounded focus:ring-2 focus:ring-green-400 education-field"/>
+                  <input name="education_school[]" type="text" placeholder="School/University Name"
+                         class="w-full p-2 border rounded focus:ring-2 focus:ring-green-400 education-field"/>
+                  <div class="flex gap-2">
+                    <input name="education_year[]" type="text" placeholder="Year (e.g., 2020 or 2018-2022)"
+                           class="w-full p-2 border rounded focus:ring-2 focus:ring-green-400 education-field"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" id="add-education"
+                    class="mt-3 px-4 py-2 text-sm bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-md font-medium transition-colors">
+              + Add Another Education Entry
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4: Experience -->
+        <div class="form-step hidden" id="form-step-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Work Experience</label>
+            <p class="text-sm text-gray-500 mb-4">Add your work experience, starting with the most recent position.</p>
+            <div id="experience-section" class="space-y-4">
+              <div class="border rounded-lg p-4 bg-gray-50">
+                <div class="space-y-3">
+                  <input name="experience_title[]" type="text" placeholder="Job Title (e.g., Senior Software Engineer)"
+                         class="w-full p-2 border rounded focus:ring-2 focus:ring-yellow-400 experience-field"/>
+                  <input name="experience_company[]" type="text" placeholder="Company Name"
+                         class="w-full p-2 border rounded focus:ring-2 focus:ring-yellow-400 experience-field"/>
+                  <input name="experience_date[]" type="text" placeholder="Date Range (e.g., Jan 2022 - Present)"
+                         class="w-full p-2 border rounded focus:ring-2 focus:ring-yellow-400 experience-field"/>
+                  <textarea name="experience_description[]" rows="4" 
+                            placeholder="Key achievements and responsibilities (one per line):&#10;Led development of microservices architecture&#10;Reduced system latency by 40%&#10;Managed team of 5 developers"
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-yellow-400 experience-field"></textarea>
+                </div>
+              </div>
+            </div>
+            <button type="button" id="add-experience"
+                    class="mt-3 px-4 py-2 text-sm bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border border-yellow-200 rounded-md font-medium transition-colors">
+              + Add Another Work Experience
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 5: Skills -->
+        <div class="form-step hidden" id="form-step-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Skills</label>
+            <p class="text-sm text-gray-500 mb-4">Add your professional skills (separate with commas or add one at a time).</p>
+            <div id="skills-section" class="space-y-3">
+              <div class="flex items-center gap-2">
+                <input name="skills[]" type="text" placeholder="e.g., Python, JavaScript, React, Project Management"
+                       class="w-full p-3 border rounded focus:ring-2 focus:ring-purple-400 skills-field"/>
+              </div>
+            </div>
+            <button type="button" id="add-skill"
+                    class="mt-3 px-4 py-2 text-sm bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 rounded-md font-medium transition-colors">
+              + Add Another Skill Entry
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between gap-4 mt-8 pt-6 border-t">
+          <button type="button" id="prevBtn"
+                  class="px-5 py-2.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition-colors"
+                  disabled>
+            Previous
+          </button>
+          
+          <a href="{{ url_for('resume.template_select') }}"
+             class="px-5 py-2.5 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 text-center font-medium transition-colors">
+            Cancel
+          </a>
+          
+          <button type="button" id="nextBtn"
+                  class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+            Next
+          </button>
+          
+          <button type="submit" id="submitBtn"
+                  class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors hidden">
+            Generate PDF
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Live Preview Section -->
+    <div class="lg:w-1/2">
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden lg:sticky lg:top-20 modern-preview {% if template_style == 'creative' %}hidden{% endif %} {% if template_style == 'simple' %}hidden{% endif %}" id="modernPreview">
+        <!-- Modern Template Preview -->
+        <div class="preview-header">
+          <h1 class="text-3xl font-bold mb-2" id="previewName-modern">YOUR NAME</h1>
+          <p class="text-sm opacity-90 mb-2" id="previewTitle-modern"></p>
+          <div class="text-sm opacity-90" id="previewContact-modern">
+            <span id="previewEmail-modern">email@example.com</span>
+            <span class="mx-2">|</span>
+            <span id="previewPhone-modern">(555) 123-4567</span>
+            <span id="previewLocation-modern"></span>
+            <span id="previewLinkedIn-modern"></span>
+          </div>
+        </div>
+        
+        <div class="p-6">
+          <!-- Education Preview -->
+          <div id="educationPreview-modern">
+            <h2 class="section-title">EDUCATION</h2>
+            <div id="educationList-modern">
+              <p class="text-gray-400 italic text-sm">Your education details will appear here...</p>
+            </div>
+          </div>
+
+          <!-- Experience Preview -->
+          <div id="experiencePreview-modern">
+            <h2 class="section-title">EXPERIENCE</h2>
+            <div id="experienceList-modern">
+              <p class="text-gray-400 italic text-sm">Your work experience will appear here...</p>
+            </div>
+          </div>
+
+          <!-- Skills Preview -->
+          <div id="skillsPreview-modern">
+            <h2 class="section-title">SKILLS</h2>
+            <div id="skillsList-modern">
+              <p class="text-gray-400 italic text-sm">Your skills will appear here...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Creative Template Preview -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden lg:sticky lg:top-20 creative-preview {% if template_style != 'creative' %}hidden{% endif %}" id="creativePreview">
+        <div class="preview-container">
+          <div class="sidebar">
+            <h1 class="text-2xl font-bold mb-1" id="previewName-creative">YOUR NAME</h1>
+            <p class="text-sm opacity-90 mb-4" id="previewTitle-creative"></p>
+            
+            <div class="sidebar-section-title">CONTACT</div>
+            <div class="text-sm space-y-1 mb-4">
+              <p id="previewEmail-creative">email@example.com</p>
+              <p id="previewPhone-creative">(555) 123-4567</p>
+              <p id="previewLocation-creative"></p>
+              <p id="previewLinkedIn-creative"></p>
+            </div>
+            
+            <div id="skillsPreview-creative">
+              <div class="sidebar-section-title">SKILLS</div>
+              <div id="skillsList-creative">
+                <p class="text-sm opacity-90 italic">Your skills will appear here...</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="main-content">
+            <!-- Education Preview -->
+            <div id="educationPreview-creative">
+              <h2 class="section-title">EDUCATION</h2>
+              <div id="educationList-creative">
+                <p class="text-gray-400 italic text-sm">Your education details will appear here...</p>
+              </div>
+            </div>
+
+            <!-- Experience Preview -->
+            <div id="experiencePreview-creative">
+              <h2 class="section-title">EXPERIENCE</h2>
+              <div id="experienceList-creative">
+                <p class="text-gray-400 italic text-sm">Your work experience will appear here...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Simple Template Preview -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden lg:sticky lg:top-20 simple-preview {% if template_style != 'simple' %}hidden{% endif %}" id="simplePreview">
+        <div class="preview-header">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2" id="previewName-simple">YOUR NAME</h1>
+          <p class="text-sm text-gray-700 mb-2" id="previewTitle-simple"></p>
+          <div class="text-sm text-gray-700" id="previewContact-simple">
+            <span id="previewEmail-simple">email@example.com</span>
+            <span class="mx-2">|</span>
+            <span id="previewPhone-simple">(555) 123-4567</span>
+            <span id="previewLocation-simple"></span>
+            <span id="previewLinkedIn-simple"></span>
+          </div>
+        </div>
+        
+        <div class="p-6">
+          <!-- Education Preview -->
+          <div id="educationPreview-simple">
+            <h2 class="section-title">EDUCATION</h2>
+            <div id="educationList-simple">
+              <p class="text-gray-400 italic text-sm">Your education details will appear here...</p>
+            </div>
+          </div>
+
+          <!-- Experience Preview -->
+          <div id="experiencePreview-simple">
+            <h2 class="section-title">PROFESSIONAL EXPERIENCE</h2>
+            <div id="experienceList-simple">
+              <p class="text-gray-400 italic text-sm">Your work experience will appear here...</p>
+            </div>
+          </div>
+
+          <!-- Skills Preview -->
+          <div id="skillsPreview-simple">
+            <h2 class="section-title">SKILLS</h2>
+            <div id="skillsList-simple">
+              <p class="text-gray-400 italic text-sm">Your skills will appear here...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Pass Flask template variable to JavaScript
+    const templateStyle = '{{ template_style }}';
+  </script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
